@@ -167,7 +167,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "SelectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Form2";
+            this.Text = "Логи и фильтрация";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_close);
             this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

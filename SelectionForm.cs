@@ -42,23 +42,88 @@ namespace Api_Apathe
                 Postgres.Insert_postgres(Postgres);
 
                  var data  =  Postgres.Select_logi(Postgres);
-                for (int i = 1; i < data.Length; i++)
+        
+                // dataGridView1.RowCount = data.Length;
+                //Колонку по умолчанию
+               // dataGridView1.ColumnCount = 0;
+                DataGridViewTextBoxColumn Ips = new DataGridViewTextBoxColumn();
+                Ips.Name = "Ip adress";
+                DataGridViewTextBoxColumn Dats = new DataGridViewTextBoxColumn();
+                Dats.Name = "Дата";
+
+                DataGridViewTextBoxColumn Requests = new DataGridViewTextBoxColumn();
+                Requests.Name = "Запросы";
+
+                DataGridViewTextBoxColumn Statuss = new DataGridViewTextBoxColumn();
+                Statuss.Name = "Статус";
+
+
+                DataGridViewTextBoxColumn Sizes = new DataGridViewTextBoxColumn();
+                Sizes.Name = "Размер";
+
+               // dataGridView1.Columns.Count = 0;
+
+                dataGridView1.Columns.Add(Ips);
+
+                dataGridView1.Columns.Add(Dats);
+
+                dataGridView1.Columns.Add(Requests);
+
+                dataGridView1.Columns.Add(Statuss);
+
+                dataGridView1.Columns.Add(Sizes);
+
+                dataGridView1.RowCount = data.Count();
+
+                for (int i = 0; i < data.Length; i++)
                 {
-                    DataGridViewTextBoxCell Ip = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells[0];
-                    Ip.Value = data[i].Ip;
+                   DataGridViewTextBoxCell Ip = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Ip adress"];
+                   Ip.Value = data[i].Ip;
+              
 
-                    DataGridViewTextBoxCell Date = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells[1];
-                    Date.Value = data[i].Date;
 
-                    DataGridViewTextBoxCell Request = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells[2];
+                    DataGridViewTextBoxCell Request = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Запросы"];
                     Request.Value = data[i].Request;
-                    DataGridViewTextBoxCell Status = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells[3];
+                   
+                    DataGridViewTextBoxCell Status = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Статус"];
                     Status.Value = data[i].Status;
-
-                    DataGridViewTextBoxCell Size = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells[4];
+                
+                    DataGridViewTextBoxCell Size = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Размер"];
                     Size.Value = data[i].Size;
+                   // Size.Size. =AutoSizeMode  .Zoom;
                 }
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+                //DataGridViewTextBoxColumn Dat = new DataGridViewTextBoxColumn();
+                //Dat.Name = "Дата";
+                //dataGridView1.Columns.Add(Dat);
+
+                //dataGridView1.RowCount = data.Count();
+                //for (int i = 0; i < data.Count(); i++)
+                //{
+                //    // DataGridViewTextBoxCell
+
+                //  //  dataGridView1.Rows[0].Cells[0]
+                ////}
+
+
+                //dataGridView1.RowCount = data.Count();
+                //for (int i = 0; i < data.Length; i++)
+                //{
+
+                //}
+
+
+                //dataGridView1.RowCount = data.Count();
+                //for (int i = 0; i < data.Length; i++)
+                //{
+
+                //}
+
+                //for (int i = 0; i < data.Length; i++)
+                //{
+
+                //}
 
 
                 //int CountLogs = 0;
@@ -132,7 +197,6 @@ namespace Api_Apathe
                 ////Называем колонку для картинок
                 //imgColumn.Name = "Images";
             }
-            
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
