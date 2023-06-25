@@ -1,5 +1,5 @@
-using Npgsql;
-using System;
+//using Npgsql;
+//using System;
 
 namespace Api_Apathe
 {
@@ -69,17 +69,13 @@ namespace Api_Apathe
                         else
                         {
                             bool User = false;
-
                             User = _Postgres.Check_user(User, _Postgres, textBox1.Text, textBox3.Text);
 
                             if (User == true)
                             {
                                 SelectionForm form2 = new SelectionForm();
-
                                 form2.Show();
-
                                 form2.Connect(_Postgres);
-
                                 this.Hide();
                             }
                             else
@@ -100,8 +96,6 @@ namespace Api_Apathe
         {
             try
             {
-
-
                 RegistrationForm form = new RegistrationForm();
 
                 form.Connect(_Postgres);

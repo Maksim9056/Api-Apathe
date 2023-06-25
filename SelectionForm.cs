@@ -1,15 +1,15 @@
-﻿using Npgsql;
-using System.Globalization;
+﻿//using Npgsql;
+//using System.Globalization;
 using System.Text.Json;
-using System.Text.RegularExpressions;
+//using System.Text.RegularExpressions;
 
-using System.IO;
-using System.Windows.Forms;
-using Microsoft.VisualBasic.ApplicationServices;
-using static Npgsql.PostgresTypes.PostgresCompositeType;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.VisualBasic.Logging;
+//using System.IO;
+//using System.Windows.Forms;
+//using Microsoft.VisualBasic.ApplicationServices;
+//using static Npgsql.PostgresTypes.PostgresCompositeType;
+//using System.Text;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
+//using Microsoft.VisualBasic.Logging;
 //using Newtonsoft.Json.Linq;
 
 namespace Api_Apathe
@@ -34,7 +34,6 @@ namespace Api_Apathe
         public void Connect(Connection_Database_Postgres postgres)
         {
             Postgres = postgres;
-
         }
 
         public void Servis()
@@ -52,52 +51,37 @@ namespace Api_Apathe
                 Ips.Name = "Ip adress";
                 DataGridViewTextBoxColumn Dats = new DataGridViewTextBoxColumn();
                 Dats.Name = "Дата";
-
                 DataGridViewTextBoxColumn Requests = new DataGridViewTextBoxColumn();
                 Requests.Name = "Запросы";
-
                 DataGridViewTextBoxColumn Statuss = new DataGridViewTextBoxColumn();
                 Statuss.Name = "Статус";
-
-
                 DataGridViewTextBoxColumn Sizes = new DataGridViewTextBoxColumn();
                 Sizes.Name = "Размер";
 
                 //        dataGridView1.Columns.Count = 0;
                 dataGridView1.ColumnCount = 0;
                 dataGridView1.Columns.Add(Ips);
-
                 dataGridView1.Columns.Add(Dats);
-
                 dataGridView1.Columns.Add(Requests);
-
                 dataGridView1.Columns.Add(Statuss);
-
                 dataGridView1.Columns.Add(Sizes);
-
                 dataGridView1.RowCount = data.Count();
-    
-
 
                 for (int i = 0; i < data.Length; i++)
                 {
-                   DataGridViewTextBoxCell Ip = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Ip adress"];
-                   Ip.Value = data[i].Ip;
-
-
+                    DataGridViewTextBoxCell Ip = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Ip adress"];
+                    Ip.Value = data[i].Ip;
                     DataGridViewTextBoxCell time = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Дата"];
                     time.Value = data[i].Date;
-
                     DataGridViewTextBoxCell Request = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Запросы"];
                     Request.Value = data[i].Request;
-                   
                     DataGridViewTextBoxCell Status = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Статус"];
                     Status.Value = data[i].Status;
-                
                     DataGridViewTextBoxCell Size = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Размер"];
                     Size.Value = data[i].Size;
-                   // Size.Size. =AutoSizeMode  .Zoom;
+                    // Size.Size. =AutoSizeMode  .Zoom;
                 }
+
                 logs = data;
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
@@ -248,23 +232,17 @@ namespace Api_Apathe
                 //        else
                 //        {
                 var Filter_data = Postgres.filter_logi(Postgres, textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
-
-
                 bool ip = false;
-
                 bool Date = false;
-
                 bool Request = false;
-
                 bool Statusss = false;
-
                 bool Siz = false;
+
                 dataGridView1.ColumnCount = 0;
                 for (int i = 0; i < Filter_data.Length; i++)
                 {
                     if (string.IsNullOrEmpty(Filter_data[i].Ip))
                     {
-
                     }
                     else
                     {
@@ -323,7 +301,6 @@ namespace Api_Apathe
                 {
                     if (string.IsNullOrEmpty(Filter_data[0].Size))
                     {
-
                     }
                     else
                     {
@@ -339,7 +316,6 @@ namespace Api_Apathe
                 dataGridView1.RowCount = Filter_data.Count();
                 for (int i = 0; i < Filter_data.Length; i++)
                 {
-
                     if (ip == true)
                     {
                         DataGridViewTextBoxCell Ip = (DataGridViewTextBoxCell)dataGridView1.Rows[i].Cells["Ip adress"];
@@ -376,15 +352,8 @@ namespace Api_Apathe
         }
 
 
-
-
-
-        
-
         private void button3_Click(object sender, EventArgs e)
         {
-
-
             //using (FileStream json_Fille = new FileStream(path + "\\data.json", FileMode.Append))
             //{
             //    if (json_Fille.Length == 0)
@@ -413,27 +382,21 @@ namespace Api_Apathe
             //long endPoint = json_Fille.Length;
 
 
-
-
-
             //Set the stream position to the end of the file.        
             //json_Fille.Seek(endPoint, SeekOrigin.Begin);
             try
             {
-
                 var path = Environment.CurrentDirectory.ToString();
                 using (FileStream json_Fille = new FileStream(path + "\\data.json", FileMode.OpenOrCreate))
                 {
                     Json_T json = new Json_T(logs);
                     JsonSerializer.Serialize<Json_T>(json_Fille, json);
-
                 }
             }
             catch(Exception x)
             {
                 MessageBox.Show(x.Message);
             }
-            ////{
         }
     }
 }

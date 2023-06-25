@@ -1,8 +1,9 @@
 ﻿
 namespace Api_Apathe
-{
-    [Serializable]
+{    
+    
     //Json класс  логов apathe
+    [Serializable]
     public class Json
     {
         Json() { }
@@ -21,15 +22,18 @@ namespace Api_Apathe
             Size = size;
         }
     }
-    [Serializable]
+
+
     //Json_Travel для десерелизации Json_Travel класса
+    [Serializable]
     public class Json_Travel
     {
         public List<Json> Json_Travels { get; set; } = new List<Json>();
     }
-    [Serializable]
+
 
     //Json_Travel для Серелизации Json класа
+    [Serializable]
     public class Json_T
     {
         Json_T() { }
