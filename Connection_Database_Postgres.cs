@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Api_Apathe
 {
@@ -292,44 +293,178 @@ namespace Api_Apathe
 
             return logs;
         }
-            ///  
-            //using (FileStream json_Fille = new FileStream(path + "\\data.json", FileMode.Append))
-            //{
-            //    if (json_Fille.Length == 0)
-            //    {
-            //        Byte[] Aa = Encoding.Default.GetBytes("[");
-            //        json_Fille.Write(Aa, 0, Aa.Length);
-            //    }
-            //    var options = new JsonSerializerOptions
-            //    {
-            //        AllowTrailingCommas = true
-            //    };
 
-            //    Json json = new Json(ip, datetimes, request, status, size);
-            //    JsonSerializer.Serialize<Json>(json_Fille, json, options);
-            //    if (CountLog < 11)
-            //    {
-            //        Byte[] Aa2 = Encoding.Default.GetBytes(",");
-            //        json_Fille.Write(Aa2, 0, Aa2.Length);
-            //    }
-            //    if (CountLog == 11)
-            //    {
-            //        Byte[] Aa3 = Encoding.Default.GetBytes("]");
-            //        json_Fille.Write(Aa3, 0, Aa3.Length);
-            //    }
-            //}
-            //long endPoint = json_Fille.Length;
-            // Set the stream position to the end of the file.        
-            // json_Fille.Seek(endPoint, SeekOrigin.Begin);
-
-            //Что-то падает
-            //    npgsqlCommand.CommandText = Insert_logs;
-            //Count = 0;
+    
+     
+        /// <summary>
+        /// Выводит  список логов в Json[]
+        /// </summary>
+        public Json[] filter_logi(Connection_Database_Postgres postgres, string Ip, string dati1, string dati2,string Status)
+        {
+            Json[] logs;
 
 
-            /////////////////
+            int CountLog = 0;
+            using (var connection = new NpgsqlConnection(postgres.connectionString))
+            {
+                connection.Open();
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    string All = "";
+                    if (string.IsNullOrEmpty(Ip) == false) { All = $"Ip Like '{Ip}'"; };
+                    if (string.IsNullOrEmpty(dati1) == false)
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = All + $"date >= '{dati1}'";
+                    };
+                    if (string.IsNullOrEmpty(dati2) == false) 
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = All + $"date <= '{dati2}'"; 
+                    };
+                    if (string.IsNullOrEmpty(Status) == false) 
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = $"status Like '{Status}'";           
+                    };
+
+                    if (All.Length > 0) { All = " where " + All; };
+                    
+
+                    var SqL = $"SELECT Count(*) AS rec_count FROM logs "+All;
+                    //command.ExecuteNonQuery();
+                    NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
+                    npgsqlCommand2.ExecuteNonQuery();
+
+
+                    NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
+
+                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
+                  //  SqL = "";
+                    if (npgsqlDataReader.HasRows == true)
+                    {
+                        while (npgsqlDataReader.Read())
+                        {
+                            CountLog = Convert.ToInt32(npgsqlDataReader["rec_count"]);
+                        }
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            Json[] log = new Json[CountLog];
 
 
 
+
+            using (var connection = new NpgsqlConnection(postgres.connectionString))
+            {
+                connection.Open();
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    string All = "";
+                    if (string.IsNullOrEmpty(Ip) == false) { All = $"Ip Like '{Ip}'"; };
+                    if (string.IsNullOrEmpty(dati1) == false)
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = All + $"date >= '{dati1}'";
+                    };
+                    if (string.IsNullOrEmpty(dati2) == false)
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = All + $"date <= '{dati2}'";
+                    };
+                    if (string.IsNullOrEmpty(Status) == false)
+                    {
+                        if (All.Length > 0) { All = All + " and "; };
+                        All = $"status Like '{Status}'";
+                    };
+
+                    if (All.Length > 0) { All = " where " + All; };
+
+
+                    var SqL = $"SELECT id_logs, ip, date, request, status, size  FROM logs " + All;
+                    //command.ExecuteNonQuery();
+                    NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
+                    npgsqlCommand2.ExecuteNonQuery();
+
+
+                    NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
+
+                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
+                    //  SqL = "";
+                    SqL = "";
+                    int i = 0;
+                    if (npgsqlDataReader.HasRows == true)
+                    {
+                        while (npgsqlDataReader.Read())
+                        {
+                            Json Log = new Json(Convert.ToString(npgsqlDataReader["Ip"]),
+                             Convert.ToDateTime(npgsqlDataReader["date"]),
+                              Convert.ToString(npgsqlDataReader["request"]),
+                              Convert.ToString(npgsqlDataReader["status"]),
+                               Convert.ToString(npgsqlDataReader["size"]));
+                            log[i] = Log;
+                            i++;
+                        }
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                
+            }
+
+
+            logs = log;
+            return logs;
         }
+
+        ///  
+        //using (FileStream json_Fille = new FileStream(path + "\\data.json", FileMode.Append))
+        //{
+        //    if (json_Fille.Length == 0)
+        //    {
+        //        Byte[] Aa = Encoding.Default.GetBytes("[");
+        //        json_Fille.Write(Aa, 0, Aa.Length);
+        //    }
+        //    var options = new JsonSerializerOptions
+        //    {
+        //        AllowTrailingCommas = true
+        //    };
+
+        //    Json json = new Json(ip, datetimes, request, status, size);
+        //    JsonSerializer.Serialize<Json>(json_Fille, json, options);
+        //    if (CountLog < 11)
+        //    {
+        //        Byte[] Aa2 = Encoding.Default.GetBytes(",");
+        //        json_Fille.Write(Aa2, 0, Aa2.Length);
+        //    }
+        //    if (CountLog == 11)
+        //    {
+        //        Byte[] Aa3 = Encoding.Default.GetBytes("]");
+        //        json_Fille.Write(Aa3, 0, Aa3.Length);
+        //    }
+        //}
+        //long endPoint = json_Fille.Length;
+        // Set the stream position to the end of the file.        
+        // json_Fille.Seek(endPoint, SeekOrigin.Begin);
+
+        //Что-то падает
+        //    npgsqlCommand.CommandText = Insert_logs;
+        //Count = 0;
+
+
+        /////////////////
+
+
+
+    }
 }
