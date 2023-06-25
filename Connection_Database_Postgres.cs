@@ -15,12 +15,12 @@ namespace Api_Apathe
         /// <summary>
         /// Создает подключение  доступное только в этом классе
         /// </summary>
-        public string connectionString = "Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=1";
+        public string connectionString = $"Host=localhost;Port=5432;Database={LoginForm.Name_Sql};Username={LoginForm.User_postgres};Password={LoginForm.Postgres_password}";
 
         /// <summary>
         /// Создает подключение статическое
         /// </summary>
-        public static string conectionString = "Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=1";
+        public static string conectionString = $"Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=1";
 
 
         /// <summary>
@@ -137,10 +137,8 @@ namespace Api_Apathe
                         var status = match.Groups[4].Value;
                         var size = match.Groups[5].Value;
 
-                        // var sises = match.Groups[6].Value;
                         Console.WriteLine($"IP: {ip} Request: {request}");
-                    
-                        //     string dat = "28/Jul/2006:10:27:10 -0300";
+
                         string format = "dd/MMM/yyyy:HH:mm:ss zzz";
 
                         DateTime datetimes = DateTime.ParseExact(datetime, format, CultureInfo.InvariantCulture);
@@ -152,13 +150,13 @@ namespace Api_Apathe
                             using (MemoryStream ms = new MemoryStream())
                             {
                                 var SqL = "SELECT Count(*) AS rec_count FROM logs";
-                                //command.ExecuteNonQuery();
+                         
                                 NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
                                 npgsqlCommand2.ExecuteNonQuery();
 
                                 NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
 
-                                //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
+                              
                                 SqL = "";
                                 if (npgsqlDataReader.HasRows == true)
                                 {
@@ -216,13 +214,11 @@ namespace Api_Apathe
                 using (MemoryStream ms = new MemoryStream())
                 {
                     var SqL = "SELECT Count(*) AS rec_count FROM logs";
-                    //command.ExecuteNonQuery();
+                
                     NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
                     npgsqlCommand2.ExecuteNonQuery();
-
                     NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
 
-                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
                     SqL = "";
                     if (npgsqlDataReader.HasRows == true)
                     {
@@ -236,7 +232,7 @@ namespace Api_Apathe
                     }
                 }
             }
-
+           
             Json[] log = new Json[CountLog];
             using (var connection = new NpgsqlConnection(_Postgres.connectionString))
             {
@@ -244,13 +240,11 @@ namespace Api_Apathe
                 using (MemoryStream ms = new MemoryStream())
                 {
                     var SqL = "SELECT id_logs, ip, date, request, status, size FROM public.logs;";
-                    //command.ExecuteNonQuery();
                     NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
                     npgsqlCommand2.ExecuteNonQuery();
 
                     NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
 
-                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
                     SqL = "";
                     int i = 0;
                     if (npgsqlDataReader.HasRows == true)
@@ -312,14 +306,11 @@ namespace Api_Apathe
                     if (All.Length > 0) { All = " where " + All; };
 
                     var SqL = $"SELECT Count(*) AS rec_count FROM logs "+All;
-                    //command.ExecuteNonQuery();
                     NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
                     npgsqlCommand2.ExecuteNonQuery();
 
                     NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
-
-                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
-                  //  SqL = "";
+                 
                     if (npgsqlDataReader.HasRows == true)
                     {
                         while (npgsqlDataReader.Read())
@@ -361,14 +352,10 @@ namespace Api_Apathe
                     if (All.Length > 0) { All = " where " + All; };
 
                     var SqL = $"SELECT id_logs, ip, date, request, status, size  FROM logs " + All;
-                    //command.ExecuteNonQuery();
                     NpgsqlCommand npgsqlCommand2 = new NpgsqlCommand(SqL, connection);
                     npgsqlCommand2.ExecuteNonQuery();
-
                     NpgsqlDataReader npgsqlDataReader = npgsqlCommand2.ExecuteReader();
-
-                    //  NpgsqlDataReader npgsqlDataReade = npgsqlCommand3.ExecuteReader();
-                    //  SqL = "";
+                
                     SqL = "";
                     int i = 0;
                     if (npgsqlDataReader.HasRows == true)
@@ -392,42 +379,5 @@ namespace Api_Apathe
             logs = log;
             return logs;
         }
-
-        ///  
-        //using (FileStream json_Fille = new FileStream(path + "\\data.json", FileMode.Append))
-        //{
-        //    if (json_Fille.Length == 0)
-        //    {
-        //        Byte[] Aa = Encoding.Default.GetBytes("[");
-        //        json_Fille.Write(Aa, 0, Aa.Length);
-        //    }
-        //    var options = new JsonSerializerOptions
-        //    {
-        //        AllowTrailingCommas = true
-        //    };
-
-        //    Json json = new Json(ip, datetimes, request, status, size);
-        //    JsonSerializer.Serialize<Json>(json_Fille, json, options);
-        //    if (CountLog < 11)
-        //    {
-        //        Byte[] Aa2 = Encoding.Default.GetBytes(",");
-        //        json_Fille.Write(Aa2, 0, Aa2.Length);
-        //    }
-        //    if (CountLog == 11)
-        //    {
-        //        Byte[] Aa3 = Encoding.Default.GetBytes("]");
-        //        json_Fille.Write(Aa3, 0, Aa3.Length);
-        //    }
-        //}
-        //long endPoint = json_Fille.Length;
-        // Set the stream position to the end of the file.        
-        // json_Fille.Seek(endPoint, SeekOrigin.Begin);
-
-        //Что-то падает
-        //    npgsqlCommand.CommandText = Insert_logs;
-        //Count = 0;
-
-
-        /////////////////
     }
 }
